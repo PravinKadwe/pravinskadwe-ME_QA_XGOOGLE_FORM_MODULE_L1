@@ -19,6 +19,9 @@ repositories {
 
 dependencies {
 
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+
     // https://mvnrepository.com/artifact/org.testng/testng
     testImplementation 'org.testng:testng:7.10.2'
 
@@ -62,18 +65,33 @@ test {
 
 mainClassName = 'demo.App'
 
+// checkstyle {
+//     toolVersion = '8.45' // Check for the latest version compatible with your setup
+//     config = rootProject.resources.text.fromFile('__CRIO__/checkstyle.xml')
+//     sourceSets = [sourceSets.test]
+//     ignoreFailures = true
+// }
+
 checkstyle {
-    toolVersion = '8.45' // Check for the latest version compatible with your setup
-    config = rootProject.resources.text.fromFile('__CRIO__/checkstyle.xml')
-    sourceSets = [sourceSets.test]
-    ignoreFailures = true
+    toolVersion = '8.45' // Keep this as per your setup
+    config = rootProject.resources.text.fromFile('__CRIO__/checkstyle.xml') // Check if this path is correct
+    sourceSets = [sourceSets.main, sourceSets.test] // Include both main and test source sets
+    ignoreFailures = false // Set to false to ensure build fails on Checkstyle violations
 }
+
+task startScript(type:Exec) {
+   commandLine './selenium-run.sh'
+}
+
+run.dependsOn startScript
+
+test.dependsOn startScript
 
 tasks.withType(Checkstyle) {
     reports {
-            xml.required = true
-            html.required = false
-        }
+        xml.required = true
+        html.required = true
+    }
 }
 
 test {

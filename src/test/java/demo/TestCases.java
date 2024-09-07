@@ -1,177 +1,132 @@
 package demo;
 
+import demo.wrappers.Wrappers;
+import dev.failsafe.internal.util.Durations;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.WindowType;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
+import org.w3c.dom.html.HTMLBodyElement;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-// import io.github.bonigarcia.wdm.WebDriverManager;
-import demo.wrappers.Wrappers;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class TestCases {
-    ChromeDriver driver;
+    RemoteWebDriver driver;
+    Wrappers wrappers;
 
-    /*
-     * TODO: Write your tests here with testng @Test annotation. 
-     * Follow `testCase01` `testCase02`... format or what is provided in instructions
-     */
+    @BeforeTest
+    public void startBrowser() {
+        try {
+            System.out.println("Constructor: TestCases");
+
+            // Launch Browser using Zalenium
+            final DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.setBrowserName("chrome");
+            driver = new RemoteWebDriver(new URL("http://localhost:8082/wd/hub"), capabilities);
+            driver.manage().window().maximize();
+            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+            wrappers = new Wrappers(driver); // Initialize Wrappers class with driver
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
-    public void testCase01() throws InterruptedException{
+    public void testCase01() throws InterruptedException {
         System.out.println("Start testing testCase01 ");
-        driver.get("https://forms.gle/wjPkzeSEk1CM7KgGA");
+        wrappers.openUrl("https://forms.gle/wjPkzeSEk1CM7KgGA");
 
-        boolean status = driver.getCurrentUrl().contains("forms");
+        boolean status = wrappers.verifyUrlContains("forms");
 
-        // if(status){System.out.println("Navigated to the google form");}else{System.out.println("Failed to Navigated to the google form");}
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
-        Thread.sleep(5000);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@role=\"list\"]/div[@role=\"listitem\"]")));
 
-        WebElement inputName = driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[1]/div/div/div[2]/div/div/div/div/input"));
+        WebElement inputName = wrappers.getElementByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[1]/div/div/div[2]/div/div/div/div/input");
+        wrappers.click(inputName);
+        wrappers.clearAndSendKeys(inputName, "Crio Learner");
 
-        inputName.click();
 
-        inputName.clear();
+        // Thread.sleep(2000);
 
-        inputName.sendKeys("Crio Learner");
+        WebElement textareaDescription = wrappers.getElementByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[2]/div/div/div[2]/div/div/div[2]/textarea");
+        wrappers.click(textareaDescription);
 
-        Thread.sleep(2000);
-
-        status = inputName.getText().contains("Crio Learner");
-
-        // if(status){System.out.println("Typed name into input box");}else{System.out.println("Failed to Type name into input box");}
-
-        WebElement textareaDiscription = driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[2]/div/div/div[2]/div/div/div[2]/textarea"));
-
-        textareaDiscription.click();
-
-        textareaDiscription.clear();
-
-        long epoch = System.currentTimeMillis()/1000;
-
-        textareaDiscription.sendKeys("I want to be the best QA Engineer "+epoch);
-
-        Thread.sleep(2000);
-
-        status = textareaDiscription.getText().contains("I want to be the best QA Engineer");
-
-        // if(status){System.out.println("Typed phrase into input box");}else{System.out.println("Failed to Type phrase into input box");}
-
-        WebElement ClickElement = driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[3]/div/div/div[2]/div/div/span/div/div[4]/label/div/div[1]"));
-
-        ClickElement.click();
-
-        Thread.sleep(2000);
-
-        status = ClickElement.isSelected();
+        long epoch = System.currentTimeMillis() / 1000;
+        wrappers.clearAndSendKeys(textareaDescription, "I want to be the best QA Engineer " + epoch);
         
-        // if(status){System.out.println("Clicked on Experience box");}else{System.out.println("Failed to Click on Experience box");}
 
-        driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[1]")).click();
+        // Thread.sleep(2000);
 
-        driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[2]")).click();
+        WebElement clickElement = wrappers.getElementByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[3]/div/div/div[2]/div/div/span/div/div[4]/label/div/div[1]");
 
-        driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[4]")).click();
+        wrappers.click(clickElement);
 
-        Thread.sleep(2000);
+        wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[1]");
+        wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[2]");
+        wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[4]");
 
-        driver.findElement(By.xpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[9]/div/div/div[2]/div")).click();
+        // Thread.sleep(2000);
 
-        Thread.sleep(2000);
+        wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[9]/div/div/div[2]/div");
+        // Thread.sleep(2000);
 
-        driver.findElement(By.xpath("(//div[@data-value=\"Mr\"])[2]")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//div[@data-value=\"Mr\"])[2]")));
 
-        Thread.sleep(2000);
+        wrappers.clickByXpath("(//div[@data-value=\"Mr\"])[2]");
 
-        // Calculate the date 7 days ago
+        // Thread.sleep(2000);
+
         LocalDate date = LocalDate.now().minusDays(7);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = date.format(formatter);
+        // System.out.println("formattedDate " + formattedDate);
 
-        System.out.println("formattedDate "+formattedDate);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@type='date']")));
 
-        // Find the date input field
-        WebElement dateField = driver.findElement(By.xpath("//input[@type='date']"));
+        WebElement dateField = wrappers.getElementByXpath("//input[@type='date']");
+        dateField.sendKeys(formattedDate);
 
-        // Use JavaScript to set the value of the date field
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].value = '';", dateField); // Clear the field
-        js.executeScript("arguments[0].value = arguments[1];", dateField, formattedDate); // Set the value
-        js.executeScript("arguments[0].dispatchEvent(new Event('input'));", dateField); // Trigger input event
-        js.executeScript("arguments[0].dispatchEvent(new Event('change'));", dateField); // Trigger change event
-        
+        // Thread.sleep(10000);
 
-        Thread.sleep(2000);
-        
-        WebElement hourField = driver.findElement(By.xpath("//input[@aria-label='Hour']"));
-        WebElement minuteField = driver.findElement(By.xpath("//input[@aria-label='Minute']"));
+        WebElement hourField = wrappers.getElementByXpath("//input[@aria-label='Hour']");
+        WebElement minuteField = wrappers.getElementByXpath("//input[@aria-label='Minute']");
 
-        hourField.sendKeys("07");
-        minuteField.sendKeys("30");
+        wrappers.sendKeys(hourField, "07");
+        wrappers.sendKeys(minuteField, "30");
 
+        wrappers.setDate(driver, dateField, formattedDate);
 
-        driver.findElement(By.xpath("//div[@role=\"button\" and @aria-label=\"Submit\"]")).click();
+        wrappers.clickByXpath("//div[@role=\"button\" and @aria-label=\"Submit\"]");
 
+        // wait.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath("//div[@role='alert']/span"), "This is a required question"));
 
-        Thread.sleep(10000);
+        wait.until(ExpectedConditions.urlContains("formResponse"));
 
-        driver.findElement(By.xpath("//div[@role=\"button\" and @aria-label=\"Submit\"]")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[1]/div[2]/div[1]/div/div[3]")));
 
-        String SuccessMessage = driver.findElement(By.xpath("/html/body/div[1]/div[2]/div[1]/div/div[3]")).getText();
-
-        System.out.println(SuccessMessage);
-
+        String successMessage = wrappers.getTextByXpath("/html/body/div[1]/div[2]/div[1]/div/div[3]");
+        System.out.println(successMessage);
 
         System.out.println("End testing testCase01 ");
     }
 
-     
-    /*
-     * Do not change the provided methods unless necessary, they will help in automation and assessment
-     */
-    @BeforeTest
-    public void startBrowser()
-    {
-        System.setProperty("java.util.logging.config.file", "logging.properties");
-
-        // NOT NEEDED FOR SELENIUM MANAGER
-        // WebDriverManager.chromedriver().timeout(30).setup();
-
-        ChromeOptions options = new ChromeOptions();
-        LoggingPreferences logs = new LoggingPreferences();
-
-        logs.enable(LogType.BROWSER, Level.ALL);
-        logs.enable(LogType.DRIVER, Level.ALL);
-        options.setCapability("goog:loggingPrefs", logs);
-        options.addArguments("--remote-allow-origins=*");
-
-        options.addArguments("--user-data-dir=C:\\Users\\pravi\\AppData\\Local\\Google\\Chrome\\User Data");
-        options.addArguments("--profile-directory=Profile 3");
-        options.addArguments("--disable-extensions");
-        options.addArguments("--disable-popup-blocking");
-
-        System.setProperty(ChromeDriverService.CHROME_DRIVER_LOG_PROPERTY, "build/chromedriver.log"); 
-
-        driver = new ChromeDriver(options);
-
-        driver.manage().window().maximize();
-    }
-
-    // @AfterTest
-    public void endTest()
-    {
+    @AfterTest
+    public void endTest() {
         driver.close();
         driver.quit();
-
     }
 }

@@ -2,19 +2,23 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2024-09-06T23:51:27 IST" name="Test Suite for Buildout" finished-at="2024-09-06T23:52:03 IST" duration-ms="36003">
+  <suite started-at="2024-09-07T20:35:14 IST" name="Test Suite for Buildout" finished-at="2024-09-07T20:35:24 IST" duration-ms="10478">
     <groups>
     </groups>
-    <test started-at="2024-09-06T23:51:27 IST" name="Test Cases for Buildout" finished-at="2024-09-06T23:52:03 IST" duration-ms="36003">
+    <test started-at="2024-09-07T20:35:14 IST" name="Test Cases for Buildout" finished-at="2024-09-07T20:35:24 IST" duration-ms="10478">
       <class name="demo.TestCases">
-        <test-method is-config="true" signature="startBrowser()[pri:0, instance:demo.TestCases@2584b82d]" started-at="2024-09-06T23:51:27 IST" name="startBrowser" finished-at="2024-09-06T23:51:30 IST" duration-ms="2211" status="PASS">
+        <test-method is-config="true" signature="startBrowser()[pri:0, instance:demo.TestCases@61c4eee0]" started-at="2024-09-07T20:35:14 IST" name="startBrowser" finished-at="2024-09-07T20:35:18 IST" duration-ms="3710" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- startBrowser -->
-        <test-method signature="testCase01()[pri:0, instance:demo.TestCases@2584b82d]" started-at="2024-09-06T23:51:30 IST" name="testCase01" finished-at="2024-09-06T23:52:03 IST" duration-ms="33744" status="PASS">
+        <test-method signature="testCase01()[pri:0, instance:demo.TestCases@61c4eee0]" started-at="2024-09-07T20:35:18 IST" name="testCase01" finished-at="2024-09-07T20:35:24 IST" duration-ms="6511" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testCase01 -->
+        <test-method is-config="true" signature="endTest()[pri:0, instance:demo.TestCases@61c4eee0]" started-at="2024-09-07T20:35:24 IST" name="endTest" finished-at="2024-09-07T20:35:24 IST" duration-ms="148" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- endTest -->
       </class> <!-- demo.TestCases -->
     </test> <!-- Test Cases for Buildout -->
   </suite> <!-- Test Suite for Buildout -->
