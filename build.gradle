@@ -18,6 +18,11 @@ repositories {
 }
 
 dependencies {
+    // SLF4J API
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+
+    // Logback (SLF4J implementation)
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
 
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
@@ -25,10 +30,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.testng/testng
     testImplementation 'org.testng:testng:7.10.2'
 
-
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     implementation 'org.seleniumhq.selenium:selenium-java:4.22.0'
-
 
 }
 

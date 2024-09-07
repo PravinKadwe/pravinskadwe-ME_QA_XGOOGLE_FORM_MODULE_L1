@@ -20,15 +20,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestCases {
+    private static final Logger log = LoggerFactory.getLogger(TestCases.class);
     RemoteWebDriver driver;
     Wrappers wrappers;
 
     @BeforeTest
     public void startBrowser() {
         try {
-            System.out.println("Constructor: TestCases");
+            // System.out.println("Constructor: TestCases");
 
             // Launch Browser using Zalenium
             final DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -46,7 +49,9 @@ public class TestCases {
 
     @Test
     public void testCase01() throws InterruptedException {
-        System.out.println("Start testing testCase01 ");
+        // System.out.println("Start testing testCase01 ");
+        log.info("Starting testCase01");
+
         wrappers.openUrl("https://forms.gle/wjPkzeSEk1CM7KgGA");
 
         boolean status = wrappers.verifyUrlContains("forms");
@@ -59,18 +64,12 @@ public class TestCases {
         wrappers.click(inputName);
         wrappers.clearAndSendKeys(inputName, "Crio Learner");
 
-
-        // Thread.sleep(2000);
-
         WebElement textareaDescription = wrappers.getElementByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[2]/div/div/div[2]/div/div/div[2]/textarea");
         wrappers.click(textareaDescription);
 
         long epoch = System.currentTimeMillis() / 1000;
         wrappers.clearAndSendKeys(textareaDescription, "I want to be the best QA Engineer " + epoch);
         
-
-        // Thread.sleep(2000);
-
         WebElement clickElement = wrappers.getElementByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[3]/div/div/div[2]/div/div/span/div/div[4]/label/div/div[1]");
 
         wrappers.click(clickElement);
@@ -79,16 +78,12 @@ public class TestCases {
         wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[2]");
         wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[4]/div/div/div[2]/div[@role=\"list\"]/div[4]");
 
-        // Thread.sleep(2000);
-
         wrappers.clickByXpath("(//div[@role=\"list\"]/div[@role=\"listitem\"])[9]/div/div/div[2]/div");
-        // Thread.sleep(2000);
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//div[@data-value=\"Mr\"])[2]")));
 
         wrappers.clickByXpath("(//div[@data-value=\"Mr\"])[2]");
 
-        // Thread.sleep(2000);
 
         LocalDate date = LocalDate.now().minusDays(7);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -100,7 +95,6 @@ public class TestCases {
         WebElement dateField = wrappers.getElementByXpath("//input[@type='date']");
         dateField.sendKeys(formattedDate);
 
-        // Thread.sleep(10000);
 
         WebElement hourField = wrappers.getElementByXpath("//input[@aria-label='Hour']");
         WebElement minuteField = wrappers.getElementByXpath("//input[@aria-label='Minute']");
@@ -112,16 +106,16 @@ public class TestCases {
 
         wrappers.clickByXpath("//div[@role=\"button\" and @aria-label=\"Submit\"]");
 
-        // wait.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath("//div[@role='alert']/span"), "This is a required question"));
-
         wait.until(ExpectedConditions.urlContains("formResponse"));
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[1]/div[2]/div[1]/div/div[3]")));
 
         String successMessage = wrappers.getTextByXpath("/html/body/div[1]/div[2]/div[1]/div/div[3]");
-        System.out.println(successMessage);
+        // System.out.println(successMessage);
+        log.info(successMessage);
 
-        System.out.println("End testing testCase01 ");
+        // System.out.println("End testing testCase01 ");
+        log.info("TestCase01 completed");
     }
 
     @AfterTest
